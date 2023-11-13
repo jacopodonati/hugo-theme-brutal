@@ -1,0 +1,50 @@
+{{ define "main" }}
+<div class="hex-wrapper">
+    <div class="hex-design">
+    {{ range $linea, $num := (seq 6) }}
+    <div class="linea" id="linea-{{ sub 6 $linea }}">
+        {{ readFile "themes/graffiti/static/img/i-ching/linea.svg" | safeHTML }}
+    </div>
+    {{ $linea := (add $linea 1) }}
+    {{ end }}
+    </div>
+    <div class="selector">
+        <button id="linea-6">{{ readFile "themes/graffiti/static/img/i-ching/6.svg" | safeHTML }}</button>
+        <button id="linea-7">{{ readFile "themes/graffiti/static/img/i-ching/7.svg" | safeHTML }}</button>
+        <button id="linea-8">{{ readFile "themes/graffiti/static/img/i-ching/8.svg" | safeHTML }}</button>
+        <button id="linea-9">{{ readFile "themes/graffiti/static/img/i-ching/9.svg" | safeHTML }}</button>
+        <button id="linea-cancella">cancella</button>
+    </div>
+</div>
+<div id="hex-text">
+    <header id="hex-header">
+        <div id="primary-hex">
+            <div class="symbol"></div>
+            <div class="number"></div>
+            <div class="name"></div>
+        </div>
+        <div id="relative-hex">
+            <div class="symbol"></div>
+            <div class="number relative-hex"></div>
+            <div class="name"></div>
+        </div>
+    </header>
+</div>
+<aside id="altro">
+    {{ range .Pages }}
+    <ul>
+        <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+    </ul>
+    {{ end }}
+</aside>
+{{ end }}
+
+{{ define "script" }}
+<script src="./i-ching.js" type="module"></script>
+<script src="/js/i-ching/selettore.js" type="module"></script>
+{{ end }}
+
+{{ define "theme_colors" }}
+<meta name="theme-color" content="#c3b3a9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#5b90a4" media="(prefers-color-scheme: dark)">
+{{ end }}

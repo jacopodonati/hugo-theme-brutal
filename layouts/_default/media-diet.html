@@ -1,0 +1,74 @@
+{{ define "main" }}
+<div id="tag-selector">
+   <button class="tag-button" id="tag-all" data-filter="*">tutti</button>
+   {{- $data := sort .Site.Data.media "year" "desc" -}}
+   {{ $years := (slice) }}
+   {{- range sort .Site.Data.media "year" "desc" -}}
+   {{ $years = $years | append .year }}
+   {{- end }}
+   {{ $years := uniq $years | sort }}
+   {{- range $years }}
+   <button class="tag-button" id="tag-{{ . }}" data-filter=".year-{{ . }}">{{ . }}</button>
+   {{ end }}
+</div>
+<div id="cork-board">
+   {{- $data := sort .Site.Data.media "year" "desc" -}}
+   {{- range sort .Site.Data.media "year" "desc" }}
+   {{ partial "scontrino" . }}
+   {{- end -}}
+</div>
+{{ end }}
+
+{{ define "head_script" }}
+<script src="/js/isotope.pkgd.min.js"></script>
+{{ end }}
+
+{{ define "script" }}
+<script>
+window.addEventListener('load', function () {
+   var elem = document.querySelector('#cork-board');
+   var iso = new Isotope(elem, {
+      itemSelector: '.scontrino',
+      masonry: {
+         columnWidth: 258,
+         gutter: 16,
+         fitWidth: true
+      }
+   });
+
+   var filtersElem = document.querySelector('#tag-selector');
+   filtersElem.addEventListener('click', function (event) {
+      if (!matchesSelector(event.target, 'button')) {
+         return;
+      }
+      var filterValue = event.target.getAttribute('data-filter');
+      iso.arrange({
+         filter: filterValue
+      });
+   });
+   
+   var buttonGroups = document.querySelectorAll('#tag-selector');
+   for (var i = 0, len = buttonGroups.length; i < len; i++) {
+      var buttonGroup=buttonGroups[i];
+      radioButtonGroup(buttonGroup);
+   }
+   
+   function radioButtonGroup(buttonGroup) {
+      buttonGroup.addEventListener('click', function (event) {
+         if (!matchesSelector(event.target, 'button' )) {
+            return;
+         }
+         if (buttonGroup.querySelector('.active-filter') !==null) {
+               buttonGroup.querySelector('.active-filter').classList.remove('active-filter');
+            }
+         event.target.classList.add('active-filter');
+      });
+   }
+}, false);
+</script>
+{{ end }}
+
+{{ define "theme_colors" }}
+<meta name="theme-color" content="#0b0b0b" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0b0b" media="(prefers-color-scheme: dark)">
+{{ end }}

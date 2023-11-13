@@ -1,0 +1,115 @@
+{{ define "main" }}
+<div class="{{ .Params.categories }}">
+    <div id="tag-selector">
+        {{ $tags := (slice) }}
+        {{ range where .Site.Pages "Section" .Section }}
+        {{ range .Params.tags }}
+        {{ $tags = union $tags ( slice . ) }}
+        {{ end }}
+        {{ end }}
+        <button class="tag-button active-filter" id="tag-tutti" data-filter="*">tutti</button>
+        {{ range (sort $tags) }}
+        <button class="tag-button" id="tag-{{ . }}" data-filter=".{{ . }}" style="color: #{{ slicestr (md5 .) 24 30 }}">{{ . }}</button>
+        {{ end }}
+    </div>
+    <div id="cork-board">
+        {{ range .Pages.ByDate.Reverse }}
+        <div class="quote {{ range .Params.tags }}{{ . }} {{ end }}">
+            {{ .Content }}
+            <div class="link">
+                <a href="{{ .Permalink }}">link</a>
+            </div>
+            {{ if .Params.who }}
+            <div class="who">
+                {{ .Params.who }}
+            </div>
+            {{ end }}
+            <footer class="footer">
+                <div class="source">
+                    via <a href="{{ .Params.source_url }}">{{ .Params.source_title }}</a>
+                    {{ if .Params.archive_url}}
+                    (<a href="{{ .Params.archive_url }}">arch.</a>)
+                    {{ end }}
+                </div>
+                {{ if .Params.tags }}
+                <div class="tags">[
+                    {{ range .Params.tags }}
+                    <span class="tag">
+                        {{ . }}
+                    </span>
+                    {{ end}}}
+                </div>
+                {{ end }}
+            </footer>
+        </div>
+        {{ end }}
+    </div>
+</div>
+{{ end }}
+
+{{ define "head_script" }}
+<script src="/js/isotope.pkgd.min.js"></script>
+{{ end }}
+
+{{ define "script" }}
+<script>
+    var elem = document.querySelector('#cork-board');
+    var iso = new Isotope(elem, {
+        itemSelector: '.quote',
+        transitionDuration: 0,
+        masonry: {
+            columnWidth: 320,
+            gutter: 16,
+            fitWidth: true
+        }
+    });
+
+    var filtersElem = document.querySelector('#tag-selector');
+    filtersElem.addEventListener('click', function (event) {
+        if (!matchesSelector(event.target, 'button')) {
+            return;
+        }
+        if (event.target.getAttribute('id') === 'feeling-lucky') {
+            let quotes = document.querySelectorAll('.quote');
+            let pick = Math.floor(Math.random() * quotes.length);
+            iso.hideItemElements(quotes);
+            iso.revealItemElements(quotes[pick]);
+        } else {
+            var filterValue = event.target.getAttribute('data-filter');
+            iso.arrange({
+                filter: filterValue
+            });
+        }
+    });
+
+    var buttonGroups = document.querySelectorAll('#tag-selector');
+    for (var i = 0, len = buttonGroups.length; i < len; i++) {
+        var buttonGroup = buttonGroups[i];
+        radioButtonGroup(buttonGroup);
+    }
+
+    function radioButtonGroup(buttonGroup) {
+        buttonGroup.addEventListener('click', function (event) {
+            if (!matchesSelector(event.target, 'button')) {
+                return;
+            }
+            if (
+                (event.target.getAttribute('id') === 'feeling-lucky')
+                && buttonGroup.querySelector('.active-filter') !== null
+                ) {
+                buttonGroup.querySelector('.active-filter').classList.remove('active-filter');
+            } else {
+                if (buttonGroup.querySelector('.active-filter') !== null) {
+                    buttonGroup.querySelector('.active-filter').classList.remove('active-filter');
+                }
+                event.target.classList.add('active-filter');
+            }
+        });
+    }
+</script>
+{{ end }}
+
+{{ define "theme_colors" }}
+<meta name="theme-color" content="#c7beb0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#c7beb0" media="(prefers-color-scheme: dark)">
+{{ end }}

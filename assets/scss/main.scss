@@ -1,0 +1,14 @@
+$sans_fonts: Helvetica, Arial, sans-serif;
+$serif_fonts: "Crimson Pro", -apple-system-ui-serif, ui-serif, serif;
+$emoji_fonts: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+$mono_fonts: "Courier Prime Sans", monospace;
+$base_fonts: $sans_fonts, $emoji_fonts;
+
+$max_width: 38rem;
+$font_size: 11pt;
+
+@import "fonts";
+
+@import "404";
+@import "home";
+@import "bio";

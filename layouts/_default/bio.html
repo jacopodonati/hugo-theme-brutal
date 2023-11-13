@@ -1,0 +1,8 @@
+{{ define "main" }}
+{{- $foto := .Resources.GetMatch "io.png" -}}
+<div class="wrapper">
+    <img src="{{ $foto.RelPermalink }}" class="foto">
+</div>
+<h1>{{ .Title }}</h1>
+{{ .Content }}
+{{ end }}

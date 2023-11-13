@@ -1,0 +1,5 @@
+{{ $options := (dict "targetPath" "css/main.css" "outputStyle" "compressed" "enableSourceMap" true) }}
+{{- $main_css := resources.Get "scss/main.scss" | resources.ToCSS $options | minify | fingerprint }}
+{{- $main_scss := resources.Get "scss/main.scss" -}}
+{{  $main_css := $main_scss | toCSS | minify | fingerprint }}
+        <link rel="stylesheet" href="{{ $main_css.RelPermalink }}" integrity="{{ $main_css.Data.Integrity }}">

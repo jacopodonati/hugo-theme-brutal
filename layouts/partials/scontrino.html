@@ -1,0 +1,93 @@
+<div class="scontrino boxed year-{{ .year }} media-{{ .type_label }}">
+    <div class="head">
+        <div class="year">
+            {{ .year }}
+        </div>
+        <div class="media">
+            {{ .type_label}}
+        </div>
+    </div>
+{{ if isset . "note" }}
+    <div class="note">
+        <div class="separator">******************************</div>
+        {{ .note }}
+        <div class="separator">******************************</div>
+    </div>
+{{ end }}
+    <div class="sources">
+        <div class="header">
+            <span class="source-type">TITOLO</span>
+            <span class="length">{{ .length_label }}</span>
+            <div class="separator">------------------------------</div>
+        </div>
+{{ $counter := newScratch }}
+{{ $type := .type }}
+{{ $counter.Set "length" 0 }}
+{{ $counter.Set "objects" 0 }}
+{{ range .sources }}
+{{ if eq $type "books" }}
+{{ $counter.Add "length" .length }}
+{{ $counter.Add "objects" 1 }}
+        <table class="source books">
+            <tr>
+                <td class="author">{{ .author }}</td>
+                <td class="length">{{ .length }}</td>
+            </tr>
+            <tr>
+                <td class="title">{{ .title }}</td>
+                <td></td>
+            </tr>
+        </table>
+{{ else if eq $type "shows" }}
+        <table class="source shows">
+            <tr>
+                <td class="title">{{ .title }}</td>
+                <td></td>
+            </tr>
+{{ range .seasons }}
+{{ $counter.Add "length" .length }}
+{{ $counter.Add "objects" 1 }}
+            <tr>
+                <td class="season">{{ .title }}</td>
+                <td class="length">{{ .length }}</td>
+            </tr>
+{{ end }}
+        </table>
+{{ else if eq $type "films" }}
+{{ $counter.Add "length" .length }}
+{{ $counter.Add "objects" 1 }}
+        <table class="source films">
+            <tr>
+                <td class="title">{{ .title }} ({{ .year }})</td>
+                <td class="length">{{ .length }}</td>
+            </tr>
+        </table>
+{{ end }}
+{{ end }}
+        <div class="footer">
+            <div class="separator">------------------------------</div>
+            <div class="total">
+                <div class="titles">
+                    <span class="total_label">TOT. </span>{{ $counter.Get "objects" }} {{ .count_label }}
+                </div>
+                <div class="length">
+                    {{ $counter.Get "length" }} {{ .length_label }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="foot">
+        <table>
+            <tr>
+                <td>Oper.</td>
+                <td>Data</td>
+                <td>Ora</td>
+            </tr>
+            <tr>
+                <td>{{ seq 999 | shuffle | first 1 }}</td>
+                <td>{{ dateFormat "02/01/2006" .last_update }}</td>
+                <td>{{ dateFormat "15:04" .last_update }}</td>
+            </tr>
+        </table>
+    </div>
+</div>

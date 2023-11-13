@@ -1,0 +1,28 @@
+body.bio {
+    font-family: $sans_fonts;
+    background-color: #f6f6f6;
+    max-width: $max_width;
+    margin: 0 auto;
+
+    .back-home {
+        font-size: .8rem;
+        position: absolute;
+        top: .4rem;
+        left: 1rem;
+    }
+
+    .wrapper {
+        position: absolute;
+        .foto {
+            float: left;
+            margin-right: 1rem;
+        }
+    }
+
+    h1 {
+        font-size: 3rem;
+        font-weight: normal;
+        text-align: right;
+        margin-top: 8rem;
+    }
+}
